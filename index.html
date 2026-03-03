@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>土地承包明细管理系统</title>
+  <link rel="stylesheet" href="css/style.css" />
+</head>
+<body>
+  <div class="page-wrapper">
+
+    <!-- ==================== 顶部导航 ==================== -->
+    <header class="header" role="banner">
+      <div class="header-brand">
+        <span class="logo-icon" aria-hidden="true">🌾</span>
+        <div>
+          <div>土地承包明细管理系统</div>
+          <div class="header-subtitle">Land Contract Management System</div>
+        </div>
+      </div>
+    </header>
+
+    <!-- ==================== 主内容区 ==================== -->
+    <main class="main-content" role="main">
+
+      <!-- 搜索卡片 -->
+      <section class="card" aria-label="搜索">
+        <div class="search-bar">
+          <div class="search-group">
+            <label for="searchName">承包人姓名</label>
+            <input
+              type="text"
+              id="searchName"
+              class="form-control"
+              placeholder="输入姓名模糊搜索"
+              maxlength="100"
+              aria-label="按承包人姓名搜索"
+            />
+          </div>
+          <div class="search-group">
+            <label for="searchLocation">地块位置</label>
+            <input
+              type="text"
+              id="searchLocation"
+              class="form-control"
+              placeholder="输入地块位置模糊搜索"
+              maxlength="200"
+              aria-label="按地块位置搜索"
+            />
+          </div>
+          <div class="search-actions">
+            <button id="searchBtn" class="btn btn-primary" aria-label="搜索">🔍 搜索</button>
+            <button id="resetBtn" class="btn btn-secondary" aria-label="重置搜索">重置</button>
+          </div>
+        </div>
+      </section>
+
+      <!-- 列表卡片 -->
+      <section class="card" id="tableSection" aria-label="土地承包明细列表">
+
+        <!-- 工具栏 -->
+        <div class="toolbar">
+          <div class="toolbar-left">
+            <h2 class="section-title">📋 承包明细列表</h2>
+            <span class="total-badge">共 <span id="totalCount">0</span> 条</span>
+          </div>
+          <div class="toolbar-right">
+            <button id="addBtn" class="btn btn-primary" aria-label="添加土地承包明细">
+              ＋ 添加明细
+            </button>
+          </div>
+        </div>
+
+        <!-- 表格 -->
+        <div id="tableWrapper" class="table-wrapper" role="region" aria-label="数据表格">
+          <table class="data-table" aria-label="土地承包明细数据表">
+            <thead>
+              <tr>
+                <th scope="col">#</th>
+                <th scope="col">承包人姓名</th>
+                <th scope="col">身份证号</th>
+                <th scope="col">联系电话</th>
+                <th scope="col">地块位置</th>
+                <th scope="col">面积（亩）</th>
+                <th scope="col">承包年份</th>
+                <th scope="col">备注</th>
+                <th scope="col">操作</th>
+              </tr>
+            </thead>
+            <tbody id="contractTableBody"></tbody>
+          </table>
+        </div>
+
+        <!-- 空数据提示 -->
+        <div id="emptyState" class="empty-state" style="display:none;" role="status" aria-live="polite">
+          <div class="empty-icon" aria-hidden="true">🌱</div>
+          <p>暂无数据，点击「添加明细」按钮开始录入</p>
+        </div>
+
+        <!-- 分页 -->
+        <nav id="pagination" class="pagination-wrapper" aria-label="分页导航"></nav>
+
+      </section>
+    </main>
+
+    <!-- ==================== 页脚 ==================== -->
+    <footer class="footer" role="contentinfo">
+      <p>&copy; 2026 土地承包明细管理系统 · 绿色农业信息化</p>
+    </footer>
+  </div><!-- end .page-wrapper -->
+
+  <!-- ==================== 添加/编辑 模态框 ==================== -->
+  <div id="contractModal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+    <div class="modal-box">
+      <div class="modal-header">
+        <h3 id="modalTitle" class="modal-title">添加土地承包明细</h3>
+        <button id="modalCloseBtn" class="modal-close" aria-label="关闭">&times;</button>
+      </div>
+      <div class="modal-body">
+        <form id="contractForm" novalidate autocomplete="off">
+          <div class="form-grid">
+
+            <!-- 姓名 -->
+            <div class="form-group">
+              <label for="fieldName" class="form-label">
+                承包人姓名<span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="fieldName"
+                class="form-control"
+                placeholder="请输入承包人姓名"
+                maxlength="50"
+                data-error-target="errorName"
+                aria-describedby="errorName"
+              />
+              <span id="errorName" class="field-error" role="alert"></span>
+            </div>
+
+            <!-- 身份证号 -->
+            <div class="form-group">
+              <label for="fieldIdCard" class="form-label">
+                身份证号<span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="fieldIdCard"
+                class="form-control"
+                placeholder="18位，末位可为X"
+                maxlength="18"
+                data-error-target="errorIdCard"
+                aria-describedby="errorIdCard"
+              />
+              <span id="errorIdCard" class="field-error" role="alert"></span>
+            </div>
+
+            <!-- 联系电话 -->
+            <div class="form-group">
+              <label for="fieldPhone" class="form-label">
+                联系电话<span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="fieldPhone"
+                class="form-control"
+                placeholder="11位纯数字"
+                maxlength="11"
+                data-error-target="errorPhone"
+                aria-describedby="errorPhone"
+              />
+              <span id="errorPhone" class="field-error" role="alert"></span>
+            </div>
+
+            <!-- 承包年份 -->
+            <div class="form-group">
+              <label for="fieldYear" class="form-label">
+                承包年份<span class="required">*</span>
+              </label>
+              <input
+                type="number"
+                id="fieldYear"
+                class="form-control"
+                placeholder="1949 ~ 2100"
+                min="1949"
+                max="2100"
+                data-error-target="errorYear"
+                aria-describedby="errorYear"
+              />
+              <span id="errorYear" class="field-error" role="alert"></span>
+            </div>
+
+            <!-- 地块位置（占整行） -->
+            <div class="form-group full-width">
+              <label for="fieldLandLocation" class="form-label">
+                地块位置<span class="required">*</span>
+              </label>
+              <input
+                type="text"
+                id="fieldLandLocation"
+                class="form-control"
+                placeholder="请输入地块位置"
+                maxlength="200"
+                data-error-target="errorLandLocation"
+                aria-describedby="errorLandLocation"
+              />
+              <span id="errorLandLocation" class="field-error" role="alert"></span>
+            </div>
+
+            <!-- 承包面积 -->
+            <div class="form-group">
+              <label for="fieldArea" class="form-label">
+                承包面积（亩）<span class="required">*</span>
+              </label>
+              <input
+                type="number"
+                id="fieldArea"
+                class="form-control"
+                placeholder="大于 0 的数值"
+                min="0.01"
+                step="0.01"
+                data-error-target="errorArea"
+                aria-describedby="errorArea"
+              />
+              <span id="errorArea" class="field-error" role="alert"></span>
+            </div>
+
+            <!-- 备注 -->
+            <div class="form-group full-width">
+              <label for="fieldRemark" class="form-label">备注</label>
+              <textarea
+                id="fieldRemark"
+                class="form-control"
+                placeholder="可选，填写相关备注信息"
+                maxlength="500"
+                rows="3"
+              ></textarea>
+            </div>
+
+          </div><!-- end .form-grid -->
+        </form>
+      </div>
+      <div class="modal-footer">
+        <button id="modalCancelBtn" class="btn btn-secondary">取消</button>
+        <button id="submitBtn" class="btn btn-primary">提交</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== 删除确认对话框 ==================== -->
+  <div id="deleteDialog" class="dialog-overlay" role="alertdialog" aria-modal="true" aria-labelledby="deleteDialogTitle">
+    <div class="dialog-box">
+      <div class="dialog-icon" aria-hidden="true">⚠️</div>
+      <h3 id="deleteDialogTitle" class="dialog-title">确认删除</h3>
+      <p id="deleteConfirmMsg" class="dialog-msg"></p>
+      <div class="dialog-actions">
+        <button id="deleteCancelBtn" class="btn btn-secondary">取消</button>
+        <button id="deleteConfirmBtn" class="btn btn-danger">确认删除</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ==================== Loading 遮罩 ==================== -->
+  <div id="loadingOverlay" class="loading-overlay" role="status" aria-label="加载中" aria-live="polite">
+    <div class="spinner" aria-hidden="true"></div>
+  </div>
+
+  <!-- ==================== Toast 通知 ==================== -->
+  <div id="toast" class="toast" role="status" aria-live="polite" aria-atomic="true"></div>
+
+  <!-- ==================== JavaScript 模块（按依赖顺序加载） ==================== -->
+  <script src="js/utils.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/validation.js"></script>
+  <script src="js/modal.js"></script>
+  <script src="js/contracts.js"></script>
+  <script src="js/app.js"></script>
+</body>
+</html>
