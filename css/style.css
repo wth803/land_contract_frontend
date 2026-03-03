@@ -82,6 +82,31 @@ body.modal-open {
     letter-spacing: 0.5px;
 }
 
+/* 用户信息区域（header 右侧）*/
+.header-user {
+    margin-left: auto;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+}
+
+.header-username {
+    font-size: 0.9rem;
+    opacity: 0.9;
+}
+
+.btn-logout {
+    background: rgba(255, 255, 255, 0.15);
+    color: #fff;
+    border: 1px solid rgba(255, 255, 255, 0.4);
+    padding: 6px 14px;
+    font-size: 0.85rem;
+}
+
+.btn-logout:hover:not(:disabled) {
+    background: rgba(255, 255, 255, 0.25);
+}
+
 /* ---------- 主内容区域 ---------- */
 .main {
     max-width: 1400px;
@@ -879,4 +904,72 @@ body.modal-open {
     .export-columns {
         grid-template-columns: 1fr;
     }
+}
+
+/* ---------- 登录页面 ---------- */
+.login-page {
+    min-height: 100vh;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, var(--color-primary-dark) 0%, var(--color-primary) 100%);
+    padding: 16px;
+}
+
+.login-card {
+    background: var(--color-card);
+    border-radius: var(--border-radius-lg);
+    box-shadow: var(--shadow-lg);
+    width: 100%;
+    max-width: 400px;
+    padding: 40px 36px 36px;
+}
+
+.login-header {
+    text-align: center;
+    margin-bottom: 32px;
+}
+
+.login-header .login-logo {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: 12px;
+}
+
+.login-header h1 {
+    font-size: 1.2rem;
+    font-weight: 600;
+    color: var(--color-primary-dark);
+    letter-spacing: 0.5px;
+}
+
+.login-form {
+    display: flex;
+    flex-direction: column;
+    gap: 18px;
+}
+
+.login-form .form-group {
+    gap: 6px;
+}
+
+.login-form .btn-primary {
+    width: 100%;
+    padding: 11px;
+    font-size: 1rem;
+    margin-top: 4px;
+}
+
+.login-error {
+    color: var(--color-danger);
+    font-size: 0.875rem;
+    background: #fff5f5;
+    border: 1px solid var(--color-danger-light);
+    border-radius: var(--border-radius);
+    padding: 10px 14px;
+    display: none;
+}
+
+.login-error.visible {
+    display: block;
 }
