@@ -7,6 +7,15 @@
 const API_BASE_URL = 'http://localhost:8000';
 
 /**
+ * 清除认证信息并跳转到登录页
+ */
+function handleUnauthorized() {
+    localStorage.removeItem('access_token');
+    localStorage.removeItem('username');
+    window.location.href = 'login.html';
+}
+
+/**
  * 通用请求函数，统一处理错误
  * @param {string} url - 请求路径
  * @param {object} options - fetch 配置项
@@ -16,6 +25,12 @@ async function request(url, options = {}) {
     const defaultHeaders = {
         'Content-Type': 'application/json',
     };
+
+    const token = localStorage.getItem('access_token');
+    if (token) {
+        defaultHeaders['Authorization'] = `Bearer ${token}`;
+    }
+
     const config = {
         ...options,
         headers: {
@@ -25,6 +40,12 @@ async function request(url, options = {}) {
     };
 
     const response = await fetch(`${API_BASE_URL}${url}`, config);
+
+    // 401 未授权：清除 token 并跳转到登录页
+    if (response.status === 401) {
+        handleUnauthorized();
+        return;
+    }
 
     // 尝试解析 JSON 响应体
     let data;
@@ -115,6 +136,44 @@ async function healthCheck() {
 }
 
 /**
+ * 用户登录
+ * @param {string} username - 用户名
+ * @param {string} password - 密码
+ * @returns {Promise} 包含 access_token、token_type、username 的对象
+ */
+async function loginApi(username, password) {
+    const response = await fetch(`${API_BASE_URL}/api/auth/login`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ username, password }),
+    });
+
+    let data;
+    try {
+        data = await response.json();
+    } catch (e) {
+        data = null;
+    }
+
+    if (!response.ok) {
+        const error = new Error('登录失败');
+        error.status = response.status;
+        error.data = data;
+        throw error;
+    }
+
+    return data;
+}
+
+/**
+ * 获取当前登录用户信息
+ * @returns {Promise} 当前用户信息
+ */
+async function getCurrentUser() {
+    return request('/api/auth/me');
+}
+
+/**
  * 导出土地承包明细到 Excel
  * @param {Array<string>} columns - 要导出的列名数组
  * @param {string} searchName - 搜索条件：姓名（可选）
@@ -128,13 +187,21 @@ async function exportContracts(columns, searchName = '', searchLandLocation = ''
         search_land_location: searchLandLocation || null,
     };
 
+    const exportToken = localStorage.getItem('access_token');
     const response = await fetch(`${API_BASE_URL}/api/contracts/export`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+            'Content-Type': 'application/json',
+            ...(exportToken ? { 'Authorization': `Bearer ${exportToken}` } : {}),
+        },
         body: JSON.stringify(body),
     });
 
     if (!response.ok) {
+        if (response.status === 401) {
+            handleUnauthorized();
+            return;
+        }
         // 尝试解析错误详情
         let errorMessage = '导出失败';
         try {
