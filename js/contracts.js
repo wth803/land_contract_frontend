@@ -353,4 +353,131 @@ function initContracts() {
             if (!isNaN(page) && page > 0) loadContracts(page);
         });
     }
+
+    // 初始化导出功能
+    initExport();
+}
+
+/**
+ * 打开导出模态框
+ */
+function openExportModal() {
+    const overlay = document.getElementById('export-modal');
+    if (overlay) {
+        overlay.style.display = 'flex';
+        document.body.classList.add('modal-open');
+    }
+}
+
+/**
+ * 关闭导出模态框
+ */
+function closeExportModal() {
+    const overlay = document.getElementById('export-modal');
+    if (overlay) {
+        overlay.style.display = 'none';
+        document.body.classList.remove('modal-open');
+    }
+}
+
+/**
+ * 初始化导出 Excel 相关事件监听
+ */
+function initExport() {
+    const exportBtn = document.getElementById('export-btn');
+    const closeBtn = document.getElementById('export-close-btn');
+    const cancelBtn = document.getElementById('export-cancel-btn');
+    const confirmBtn = document.getElementById('export-confirm-btn');
+    const overlay = document.getElementById('export-modal');
+    const selectAllCb = document.getElementById('export-select-all');
+
+    // 导出按钮：打开导出选项模态框
+    if (exportBtn) exportBtn.addEventListener('click', openExportModal);
+
+    // 关闭按钮和取消按钮：关闭模态框
+    if (closeBtn) closeBtn.addEventListener('click', closeExportModal);
+    if (cancelBtn) cancelBtn.addEventListener('click', closeExportModal);
+
+    // 点击遮罩层关闭模态框
+    if (overlay) {
+        overlay.addEventListener('click', (e) => {
+            if (e.target === overlay) closeExportModal();
+        });
+    }
+
+    // 全选 / 取消全选
+    if (selectAllCb) {
+        selectAllCb.addEventListener('change', function () {
+            document.querySelectorAll('input[name="exportColumn"]').forEach(cb => {
+                cb.checked = this.checked;
+            });
+        });
+    }
+
+    // 单个 checkbox 变化时更新全选状态
+    document.querySelectorAll('input[name="exportColumn"]').forEach(cb => {
+        cb.addEventListener('change', () => {
+            const all = document.querySelectorAll('input[name="exportColumn"]');
+            const checked = document.querySelectorAll('input[name="exportColumn"]:checked');
+            if (selectAllCb) selectAllCb.checked = all.length === checked.length;
+        });
+    });
+
+    // 确认导出按钮
+    if (confirmBtn) {
+        confirmBtn.addEventListener('click', async function () {
+            // 获取选中的列
+            const checkedBoxes = document.querySelectorAll('input[name="exportColumn"]:checked');
+            const columns = Array.from(checkedBoxes).map(cb => cb.value);
+
+            if (columns.length === 0) {
+                showToast('请至少选择一个导出字段', 'warning');
+                return;
+            }
+
+            // 如果处于搜索模式，则传入搜索条件，否则传空字符串
+            const exportSearchName = searchParams ? searchParams.name : '';
+            const exportSearchLocation = searchParams ? searchParams.landLocation : '';
+
+            // 禁用按钮，显示导出中状态
+            confirmBtn.disabled = true;
+            confirmBtn.textContent = '导出中...';
+
+            try {
+                const blob = await exportContracts(columns, exportSearchName, exportSearchLocation);
+
+                // 生成带时间戳的文件名并触发下载
+                const now = new Date();
+                const timestamp = now.getFullYear() +
+                    String(now.getMonth() + 1).padStart(2, '0') +
+                    String(now.getDate()).padStart(2, '0') + '_' +
+                    String(now.getHours()).padStart(2, '0') +
+                    String(now.getMinutes()).padStart(2, '0') +
+                    String(now.getSeconds()).padStart(2, '0');
+                const url = window.URL.createObjectURL(blob);
+                const a = document.createElement('a');
+                a.href = url;
+                a.download = `土地承包明细_${timestamp}.xlsx`;
+                document.body.appendChild(a);
+                a.click();
+                document.body.removeChild(a);
+                window.URL.revokeObjectURL(url);
+
+                showToast('导出成功！', 'success');
+                closeExportModal();
+            } catch (error) {
+                showToast('导出失败：' + error.message, 'error');
+            } finally {
+                confirmBtn.disabled = false;
+                confirmBtn.textContent = '📥 确认导出';
+            }
+        });
+    }
+
+    // ESC 键关闭导出模态框
+    document.addEventListener('keydown', (e) => {
+        if (e.key === 'Escape' && overlay && overlay.style.display === 'flex') {
+            closeExportModal();
+        }
+    });
 }
