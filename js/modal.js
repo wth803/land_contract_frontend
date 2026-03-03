@@ -14,6 +14,10 @@ const FIELD_MAP = [
     { domId: 'field-land-location', apiField: 'land_location' },
     { domId: 'field-area', apiField: 'area' },
     { domId: 'field-year', apiField: 'year' },
+    { domId: 'field-village', apiField: 'village' },
+    { domId: 'field-contractor-code', apiField: 'contractor_code' },
+    { domId: 'field-plot-code', apiField: 'plot_code' },
+    { domId: 'field-bank-account', apiField: 'bank_account' },
     { domId: 'field-remark', apiField: 'remark' },
 ];
 
@@ -106,6 +110,8 @@ function getFormData() {
     if (data.year !== '') data.year = parseInt(data.year, 10);
     // 备注为空时设为 null
     if (data.remark === '') data.remark = null;
+    // 银行卡号为空时设为 null
+    if (data.bank_account === '') data.bank_account = null;
     return data;
 }
 
@@ -174,6 +180,10 @@ function mapBackendErrors(details) {
         land_location: 'field-land-location',
         area: 'field-area',
         year: 'field-year',
+        village: 'field-village',
+        contractor_code: 'field-contractor-code',
+        plot_code: 'field-plot-code',
+        bank_account: 'field-bank-account',
         remark: 'field-remark',
     };
 
@@ -222,6 +232,10 @@ function initModal() {
     bindFieldValidation('field-land-location', 'land_location');
     bindFieldValidation('field-area', 'area');
     bindFieldValidation('field-year', 'year');
+    bindFieldValidation('field-village', 'village');
+    bindFieldValidation('field-contractor-code', 'contractor_code');
+    bindFieldValidation('field-plot-code', 'plot_code');
+    bindFieldValidation('field-bank-account', 'bank_account');
 
     // Escape 键关闭模态框
     document.addEventListener('keydown', (e) => {

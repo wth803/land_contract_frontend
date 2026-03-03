@@ -74,6 +74,50 @@ const VALIDATION_RULES = {
             message: '承包年份必须在 1949 到 2100 之间',
         },
     ],
+
+    // 村别：不能为空，最多 50 个字符
+    village: [
+        {
+            test: (v) => v.trim().length > 0,
+            message: '村别不能为空',
+        },
+        {
+            test: (v) => v.trim().length <= 50,
+            message: '村别最多 50 个字符',
+        },
+    ],
+
+    // 承包方编码：不能为空，最多 30 个字符
+    contractor_code: [
+        {
+            test: (v) => v.trim().length > 0,
+            message: '承包方编码不能为空',
+        },
+        {
+            test: (v) => v.trim().length <= 30,
+            message: '承包方编码最多 30 个字符',
+        },
+    ],
+
+    // 地块编码：不能为空，最多 30 个字符
+    plot_code: [
+        {
+            test: (v) => v.trim().length > 0,
+            message: '地块编码不能为空',
+        },
+        {
+            test: (v) => v.trim().length <= 30,
+            message: '地块编码最多 30 个字符',
+        },
+    ],
+
+    // 银行卡号：可选，长度在 10-25 位之间
+    bank_account: [
+        {
+            test: (v) => { const t = v.trim(); return t.length === 0 || (t.length >= 10 && t.length <= 25); },
+            message: '银行卡号长度应在 10 到 25 位之间',
+        },
+    ],
 };
 
 /**
@@ -101,7 +145,7 @@ function validateField(field, value) {
  */
 function validateForm(formData) {
     const errors = {};
-    const fields = ['name', 'id_card', 'phone', 'land_location', 'area', 'year'];
+    const fields = ['name', 'id_card', 'phone', 'land_location', 'area', 'year', 'village', 'contractor_code', 'plot_code', 'bank_account'];
 
     for (const field of fields) {
         const value = String(formData[field] ?? '');
