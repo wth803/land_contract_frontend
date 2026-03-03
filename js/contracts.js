@@ -108,6 +108,10 @@ function renderContractTable(items, total) {
                 <td class="location-cell">${escapeHtml(contract.land_location)}</td>
                 <td>${escapeHtml(String(contract.area))}</td>
                 <td>${escapeHtml(String(contract.year))}</td>
+                <td>${escapeHtml(contract.village || '-')}</td>
+                <td>${escapeHtml(contract.contractor_code || '-')}</td>
+                <td>${escapeHtml(contract.plot_code || '-')}</td>
+                <td>${escapeHtml(contract.bank_account || '-')}</td>
                 <td class="remark-cell">${escapeHtml(contract.remark || '-')}</td>
                 <td class="action-cell">
                     <button class="btn btn-sm btn-edit" data-action="edit" data-id="${contract.id}">编辑</button>
@@ -131,7 +135,7 @@ function renderEmptyTable(message) {
     if (totalEl) totalEl.textContent = '0';
     tbody.innerHTML = `
         <tr>
-            <td colspan="9" class="empty-state">
+            <td colspan="13" class="empty-state">
                 <div class="empty-icon">📋</div>
                 <div>${escapeHtml(message)}</div>
             </td>

@@ -82,6 +82,10 @@
                             <th scope="col">地块位置</th>
                             <th scope="col">承包面积（亩）</th>
                             <th scope="col">承包年份</th>
+                            <th scope="col">村别</th>
+                            <th scope="col">承包方编码</th>
+                            <th scope="col">地块编码</th>
+                            <th scope="col">银行卡号</th>
                             <th scope="col">备注</th>
                             <th scope="col">操作</th>
                         </tr>
@@ -216,6 +220,64 @@
                             />
                         </div>
 
+                        <!-- 村别 -->
+                        <div class="form-group">
+                            <label class="form-label" for="field-village">
+                                村别<span class="required" aria-label="必填">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="field-village"
+                                class="form-input"
+                                placeholder="请输入村别"
+                                maxlength="50"
+                                autocomplete="off"
+                            />
+                        </div>
+
+                        <!-- 承包方编码 -->
+                        <div class="form-group">
+                            <label class="form-label" for="field-contractor-code">
+                                承包方编码<span class="required" aria-label="必填">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="field-contractor-code"
+                                class="form-input"
+                                placeholder="请输入承包方编码"
+                                maxlength="30"
+                                autocomplete="off"
+                            />
+                        </div>
+
+                        <!-- 地块编码 -->
+                        <div class="form-group">
+                            <label class="form-label" for="field-plot-code">
+                                地块编码<span class="required" aria-label="必填">*</span>
+                            </label>
+                            <input
+                                type="text"
+                                id="field-plot-code"
+                                class="form-input"
+                                placeholder="请输入地块编码"
+                                maxlength="30"
+                                autocomplete="off"
+                            />
+                        </div>
+
+                        <!-- 银行卡号 -->
+                        <div class="form-group">
+                            <label class="form-label" for="field-bank-account">银行卡号</label>
+                            <input
+                                type="text"
+                                id="field-bank-account"
+                                class="form-input"
+                                placeholder="选填，10-25位"
+                                maxlength="25"
+                                autocomplete="off"
+                            />
+                        </div>
+
                         <!-- 备注（占满整行）-->
                         <div class="form-group full-width">
                             <label class="form-label" for="field-remark">备注</label>
@@ -289,6 +351,22 @@
                         <label class="checkbox-item">
                             <input type="checkbox" name="exportColumn" value="year" checked />
                             <span>承包年份</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="village" checked />
+                            <span>村别</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="contractor_code" checked />
+                            <span>承包方编码</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="plot_code" checked />
+                            <span>地块编码</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="bank_account" checked />
+                            <span>银行卡号</span>
                         </label>
                         <label class="checkbox-item">
                             <input type="checkbox" name="exportColumn" value="remark" checked />
