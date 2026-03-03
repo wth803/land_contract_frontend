@@ -49,6 +49,9 @@
                 </button>
             </div>
             <div class="toolbar-actions">
+                <button id="export-btn" class="btn btn-info" type="button">
+                    📥 导出Excel
+                </button>
                 <button id="add-btn" class="btn btn-primary" type="button">
                     ＋ 新增承包明细
                 </button>
@@ -230,6 +233,81 @@
                 <button id="modal-submit-btn" class="btn btn-primary" type="submit" form="contract-form">
                     保存
                 </button>
+            </div>
+
+        </div>
+    </div>
+
+    <!-- ============================================================
+         导出选项模态框
+         ============================================================ -->
+    <div id="export-modal" class="modal-overlay" role="dialog" aria-modal="true" aria-labelledby="export-modal-title">
+        <div class="modal export-modal">
+
+            <!-- 模态框标题栏 -->
+            <div class="modal-header">
+                <h2 class="modal-title" id="export-modal-title">导出 Excel - 选择导出字段</h2>
+                <button id="export-close-btn" class="modal-close" type="button" aria-label="关闭导出对话框">&times;</button>
+            </div>
+
+            <!-- 模态框内容 -->
+            <div class="modal-body">
+                <div class="export-options">
+                    <!-- 全选 / 取消全选 -->
+                    <div class="export-select-all">
+                        <label class="checkbox-item">
+                            <input type="checkbox" id="export-select-all" checked />
+                            <span>全选 / 取消全选</span>
+                        </label>
+                    </div>
+                    <!-- 各字段复选框 -->
+                    <div class="export-columns">
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="name" checked />
+                            <span>承包人姓名</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="id_card" checked />
+                            <span>身份证号</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="phone" checked />
+                            <span>联系电话</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="land_location" checked />
+                            <span>地块位置</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="area" checked />
+                            <span>承包面积（亩）</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="year" checked />
+                            <span>承包年份</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="remark" checked />
+                            <span>备注</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="created_at" />
+                            <span>创建时间</span>
+                        </label>
+                        <label class="checkbox-item">
+                            <input type="checkbox" name="exportColumn" value="updated_at" />
+                            <span>更新时间</span>
+                        </label>
+                    </div>
+                </div>
+                <!-- 提示信息 -->
+                <p class="export-hint">提示：如果当前处于搜索模式，将只导出搜索结果中的数据。</p>
+            </div>
+
+            <!-- 模态框底部按钮 -->
+            <div class="modal-footer">
+                <button id="export-cancel-btn" class="btn btn-secondary" type="button">取消</button>
+                <button id="export-confirm-btn" class="btn btn-info" type="button">📥 确认导出</button>
             </div>
 
         </div>

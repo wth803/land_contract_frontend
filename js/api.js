@@ -113,3 +113,44 @@ async function deleteContract(id) {
 async function healthCheck() {
     return request('/');
 }
+
+/**
+ * 导出土地承包明细到 Excel
+ * @param {Array<string>} columns - 要导出的列名数组
+ * @param {string} searchName - 搜索条件：姓名（可选）
+ * @param {string} searchLandLocation - 搜索条件：地块位置（可选）
+ * @returns {Promise<Blob>} Excel 文件 Blob
+ */
+async function exportContracts(columns, searchName = '', searchLandLocation = '') {
+    const body = {
+        columns: columns,
+        search_name: searchName || null,
+        search_land_location: searchLandLocation || null,
+    };
+
+    const response = await fetch(`${API_BASE_URL}/api/contracts/export`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(body),
+    });
+
+    if (!response.ok) {
+        // 尝试解析错误详情
+        let errorMessage = '导出失败';
+        try {
+            const errorData = await response.json();
+            if (errorData?.detail) {
+                if (Array.isArray(errorData.detail)) {
+                    errorMessage = errorData.detail.map(e => e.msg || e.message || '验证错误').join('；');
+                } else {
+                    errorMessage = errorData.detail;
+                }
+            }
+        } catch (e) {
+            // 忽略 JSON 解析错误
+        }
+        throw new Error(errorMessage);
+    }
+
+    return response.blob();
+}
