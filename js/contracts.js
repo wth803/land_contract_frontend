@@ -105,10 +105,10 @@ function renderContractTable(items, total) {
                 <td>${escapeHtml(contract.name)}</td>
                 <td>${escapeHtml(contract.id_card)}</td>
                 <td>${escapeHtml(contract.phone)}</td>
-                <td class="location-cell" title="${escapeHtml(contract.land_location)}">${escapeHtml(contract.land_location)}</td>
+                <td class="location-cell">${escapeHtml(contract.land_location)}</td>
                 <td>${escapeHtml(String(contract.area))}</td>
                 <td>${escapeHtml(String(contract.year))}</td>
-                <td class="remark-cell" title="${escapeHtml(contract.remark || '')}">${escapeHtml(contract.remark || '-')}</td>
+                <td class="remark-cell">${escapeHtml(contract.remark || '-')}</td>
                 <td class="action-cell">
                     <button class="btn btn-sm btn-edit" data-action="edit" data-id="${contract.id}">编辑</button>
                     <button class="btn btn-sm btn-delete" data-action="delete" data-id="${contract.id}" data-name="${escapeHtml(contract.name)}">删除</button>
