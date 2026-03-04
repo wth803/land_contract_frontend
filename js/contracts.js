@@ -102,16 +102,16 @@ function renderContractTable(items, total) {
             return `
             <tr>
                 <td>${rowNum}</td>
+                <td>${escapeHtml(contract.village || '-')}</td>
                 <td>${escapeHtml(contract.name)}</td>
                 <td>${escapeHtml(contract.id_card)}</td>
+                <td>${escapeHtml(contract.bank_account || '-')}</td>
                 <td>${escapeHtml(contract.phone)}</td>
+                <td>${escapeHtml(contract.contractor_code || '-')}</td>
                 <td class="location-cell">${escapeHtml(contract.land_location)}</td>
+                <td>${escapeHtml(contract.plot_code || '-')}</td>
                 <td>${escapeHtml(String(contract.area))}</td>
                 <td>${escapeHtml(String(contract.year))}</td>
-                <td>${escapeHtml(contract.village || '-')}</td>
-                <td>${escapeHtml(contract.contractor_code || '-')}</td>
-                <td>${escapeHtml(contract.plot_code || '-')}</td>
-                <td>${escapeHtml(contract.bank_account || '-')}</td>
                 <td class="remark-cell">${escapeHtml(contract.remark || '-')}</td>
                 <td class="action-cell">
                     <button class="btn btn-sm btn-edit" data-action="edit" data-id="${contract.id}">编辑</button>
